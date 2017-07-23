@@ -1,5 +1,5 @@
 
-<h1 align="center">WIP - routify</h1>
+<h1 align="center">routify</h1>
 <div align="center">
   <strong>Nice little Trie-based HTTP router</strong>
 </div>
