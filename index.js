@@ -6,9 +6,17 @@ const assert = require('assert')
 const routington = require('routington')
 const series = require('fastseries')()
 
-const HTTP_METHODS = ['DELETE', 'GET', 'HEAD', 'PATCH', 'POST', 'PUT', 'OPTIONS']
+const HTTP_METHODS = [
+  'DELETE',
+  'GET',
+  'HEAD',
+  'PATCH',
+  'POST',
+  'PUT',
+  'OPTIONS'
+]
 
-const routify = function(baseRoutes = {}) {
+const routify = function (baseRoutes = {}) {
   const router = routington()
   const middleware = []
 
@@ -16,17 +24,20 @@ const routify = function(baseRoutes = {}) {
     route(Object.assign({ url }, baseRoutes[url]))
   })
 
-  const use = function use(url, subRouter) {
+  const use = function use (url, subRouter) {
     if (typeof url === 'function') {
       middleware.push(url)
     }
   }
 
-  const route = function route(opts = {}) {
+  const route = function route (opts = {}) {
     assert(opts.url, 'no url provided')
     assert(opts.handler, `no handler provided for url: ${opts.url}`)
     assert(opts.method, `no HTTP method provided`)
-    assert(HTTP_METHODS.indexOf(opts.method) !== -1, `${opts.method} is not a supported HTTP method`)
+    assert(
+      HTTP_METHODS.indexOf(opts.method) !== -1,
+      `${opts.method} is not a supported HTTP method`
+    )
 
     const { url, handler, method } = opts
     const node = router.define(url)[0]
@@ -35,7 +46,7 @@ const routify = function(baseRoutes = {}) {
     node[method].push(handler)
   }
 
-  const lookUp = function lookUp(req, res, next) {
+  const lookUp = function lookUp (req, res, next) {
     const match = router.match(url.parse(req.url).pathname)
 
     if (!match) {
