@@ -1,6 +1,6 @@
 {
   "name": "@tiaanduplessis/routify",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Nice little Trie-based HTTP router",
   "license": "MIT",
   "repository": {
@@ -10,7 +10,9 @@
   "homepage": "https://github.com/tiaanduplessis/routify",
   "bugs": "https://github.com/tiaanduplessis/routify",
   "main": "index.js",
-  "files": ["index.js"],
+  "files": [
+    "index.js"
+  ],
   "scripts": {
     "test": "jest",
     "format": "prettier-standard index.js",
