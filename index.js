@@ -1,54 +1,41 @@
 'use strict'
 
 const url = require('url')
+const assert = require('assert')
 
 const routington = require('routington')
 const series = require('fastseries')()
 
-const HTTP_METHODS = ['GET', 'POST', 'PUT', 'DELETE']
+const HTTP_METHODS = ['DELETE', 'GET', 'HEAD', 'PATCH', 'POST', 'PUT', 'OPTIONS']
 
-const routify = function (baseRoutes = {}) {
-  // TODO: - map over the base routes and create
+const routify = function(baseRoutes = {}) {
   const router = routington()
   const middleware = []
 
-  // TODO: - Add support for default handler
+  Object.keys(baseRoutes).forEach(url => {
+    route(Object.assign({ url }, baseRoutes[url]))
+  })
 
-  const use = function use (url, subRouter) {
-    // TODO: - Add support for a subRouter
+  const use = function use(url, subRouter) {
     if (typeof url === 'function') {
       middleware.push(url)
-    } else {
-      // route({
-      //   url,
-      //   router
-      // })
     }
   }
 
-  const route = function route (opts = {}) {
-    if (!opts.url) {
-      throw new Error('no url provided')
-    }
-
-    if (!opts.handler) {
-      throw new Error(`no handler provided for url: ${opts.url}`)
-    }
-
-    if (HTTP_METHODS.indexOf(opts.method) === -1) {
-      throw new Error(`${opts.method} is not a supported HTTP method`)
-    }
+  const route = function route(opts = {}) {
+    assert(opts.url, 'no url provided')
+    assert(opts.handler, `no handler provided for url: ${opts.url}`)
+    assert(opts.method, `no HTTP method provided`)
+    assert(HTTP_METHODS.indexOf(opts.method) !== -1, `${opts.method} is not a supported HTTP method`)
 
     const { url, handler, method } = opts
     const node = router.define(url)[0]
-
-    // TODO: - Add support for middleware for route and using a sub-router
 
     node[method] = node[method] || []
     node[method].push(handler)
   }
 
-  const lookUp = function lookUp (req, res, next) {
+  const lookUp = function lookUp(req, res, next) {
     const match = router.match(url.parse(req.url).pathname)
 
     if (!match) {
@@ -59,9 +46,6 @@ const routify = function (baseRoutes = {}) {
     const node = match.node
     const handlers = node[req.method] || []
 
-    // TODO: - Add support for middleware for route and using a sub-router
-
-    // const {handlers, middleware} = node[req.method]
     if (!handlers) {
       // 405
       return

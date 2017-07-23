@@ -47,11 +47,16 @@
 <h2>Table of Contents</h2>
 <details>
   <summary>Table of Contents</summary>
+  <li><a href="#about">About</a></li>
   <li><a href="#install">Install</a></li>
   <li><a href="#usage">Usage</a></li>
   <li><a href="#contribute">Contribute</a></li>
   <li><a href="#license">License</a></li>
 </details>
+
+## About
+
+Built on top of [routington](https://github.com/pillarjs/routington). If your looking for something fast, try [find-my-way](https://github.com/delvedor/find-my-way) instead.
 
 ## Install
 
@@ -65,6 +70,33 @@ $ yarn add @tiaanduplessis/routify
 
 ```js
 const routify = require('@tiaanduplessis/routify')
+const http = require('http')
+
+const app = routify()
+
+app.use(({ req }, next) => {
+  console.log(`Request to ${req.url}`)
+  next()
+})
+
+app.route({
+  url: '/',
+  method: 'GET',
+  handler: (ctx, next) => {
+    ctx.res.end('Hai')
+  }
+})
+
+app.route({
+  url: '/foo',
+  method: 'GET',
+  handler: (ctx, next) => {
+    ctx.res.end('foo!')
+  }
+})
+
+http.createServer(app.lookUp).listen(8888)
+
 ```
 
 ## Contributing
